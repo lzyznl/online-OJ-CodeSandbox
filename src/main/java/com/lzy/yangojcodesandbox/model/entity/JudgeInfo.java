@@ -1,4 +1,4 @@
-package com.lzy.yangojcodesandbox.model;
+package com.lzy.yangojcodesandbox.model.entity;
 
 import lombok.Data;
 
@@ -11,9 +11,14 @@ public class JudgeInfo {
     private String message;
 
     /**
-     * 程序执行时间
+     * 总程序执行时间
      */
-    private String time;
+    private Long time;
+
+    /**
+     * 单个用例最大运行时间
+     */
+    private Long maxTime;
 
     /**
      * 程序执行消耗内存

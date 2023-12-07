@@ -1,13 +1,17 @@
-package com.lzy.yangojcodesandbox.model;
+package com.lzy.yangojcodesandbox.model.entity;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ExecuteCodeRequest {
     /**
      * 程序代码

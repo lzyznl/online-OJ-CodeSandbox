@@ -1,4 +1,4 @@
-package com.lzy.yangojcodesandbox.model;
+package com.lzy.yangojcodesandbox.model.entity;
 
 import lombok.Data;
 

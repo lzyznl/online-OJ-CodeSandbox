@@ -1,8 +1,8 @@
 package com.lzy.yangojcodesandbox;
 
 
-import com.lzy.yangojcodesandbox.model.ExecuteCodeRequest;
-import com.lzy.yangojcodesandbox.model.ExecuteCodeResponse;
+import com.lzy.yangojcodesandbox.model.entity.ExecuteCodeRequest;
+import com.lzy.yangojcodesandbox.model.entity.ExecuteCodeResponse;
 
 /**
  * @author lzy
