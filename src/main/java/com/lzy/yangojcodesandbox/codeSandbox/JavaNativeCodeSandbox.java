@@ -24,19 +24,21 @@ public class JavaNativeCodeSandbox implements CodeSandbox {
 
     private static final String USER_CODE_FILE_NAME = "Main.java";
 
+    private static final long waitTime = 5000L;
+
     public static void main(String[] args) {
         JavaNativeCodeSandbox javaNativeCodeSandbox = new JavaNativeCodeSandbox();
         ExecuteCodeRequest executeCodeRequest = new ExecuteCodeRequest();
-        String code = ResourceUtil.readStr("tempCode/Main.java", StandardCharsets.UTF_8);
+        String code = ResourceUtil.readStr("tempCode/unsafeCode/Main.java", StandardCharsets.UTF_8);
         executeCodeRequest.setCode(code);
-        List<String> inputList = Arrays.asList("1 2", "3 4", "1001 1002");
+        List<String> inputList = Arrays.asList("1 2");
         executeCodeRequest.setInputList(inputList);
         executeCodeRequest.setCodeLanguage("Java");
         ExecuteCodeResponse executeCodeResponse = javaNativeCodeSandbox.executeCode(executeCodeRequest);
-        List<String> outputList = executeCodeResponse.getOutputList();
-        for(int i=0;i<outputList.size();++i){
-            System.out.println(outputList.get(i));
-        }
+//        List<String> outputList = executeCodeResponse.getOutputList();
+//        for(int i=0;i<outputList.size();++i){
+//            System.out.println(outputList.get(i));
+//        }
     }
 
     @Override
@@ -63,6 +65,7 @@ public class JavaNativeCodeSandbox implements CodeSandbox {
         String CompileCodeCmd = String.format("javac -encoding utf-8 %s",UserCodeFile.getAbsolutePath());
         ExecuteMessage executeMessage = ProcessUtils.runProcessAndGetOutput(CompileCodeCmd);
         if(executeMessage.getExitValue()!=0){
+            System.out.println("编译失败");
             //编译失败，后续均无法执行
             JudgeInfo judgeInfo = new JudgeInfo();
             judgeInfo.setMessage(JudgeInfoMessageEnum.COMPILE_ERROR.getValue());
@@ -71,14 +74,17 @@ public class JavaNativeCodeSandbox implements CodeSandbox {
             executeCodeResponse.setJudgeInfo(judgeInfo);
             return executeCodeResponse;
         }else{
+            System.out.println("编译成功");
             StopWatch stopWatch = new StopWatch();
             stopWatch.start();
             //运行程序，获取输出
             for(int i=0;i<inputList.size();++i){
                 String inputArgs = inputList.get(i);
                 String executeCodeCmd = String.format("java -Dfile.encoding=UTF-8 -cp %s Main %s",UUIDCodeDir,inputArgs);
+
                 ExecuteMessage execExecuteMessage = ProcessUtils.runProcessAndGetOutput(executeCodeCmd);
                 if(execExecuteMessage.getExitValue()!=0){
+                    System.out.println("执行失败");
                     JudgeInfo judgeInfo = new JudgeInfo();
                     judgeInfo.setMessage(JudgeInfoMessageEnum.RUNTIME_ERROR.getValue());
                     executeCodeResponse.setStatus(questionStatusEnum.FAILED.getValue());

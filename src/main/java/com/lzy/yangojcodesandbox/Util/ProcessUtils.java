@@ -15,11 +15,25 @@ import java.nio.charset.StandardCharsets;
  */
 public class ProcessUtils {
 
+    private static final long waitTime = 5000L;
+
     public static ExecuteMessage runProcessAndGetOutput(String cmd){
         ExecuteMessage executeMessage = new ExecuteMessage();
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         Process execProcess = RuntimeUtil.exec(cmd);
+        //进行时间安全控制,超过时间阈值，则销毁
+
+        new Thread(()->{
+            try {
+                Thread.sleep(waitTime);
+                System.out.println("程序超时，自动中止");
+                execProcess.destroy();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
+
         try {
             int exitValue = execProcess.waitFor();
             stopWatch.stop();
